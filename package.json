@@ -1,0 +1,24 @@
+{
+  "name": "survey-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jon-kung/backend_practice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jon-kung/backend_practice/issues"
+  },
+  "homepage": "https://github.com/jon-kung/backend_practice#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "jest": "^24.7.1"
+  }
+}
