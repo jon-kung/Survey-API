@@ -1,0 +1,56 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": ["id", "title", "questions", "choices"],
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0,
+      "examples": [1]
+    },
+    "title": {
+      "$id": "#/properties/title",
+      "type": "string",
+      "title": "The Title Schema",
+      "default": "Enter Survey Title",
+      "examples": ["TEST Customer Experience Survey"],
+      "pattern": "^(.*)$"
+    },
+    "questions": {
+      "$id": "#/properties/questions",
+      "type": "array",
+      "title": "The Questions Schema",
+      "items": {
+        "$id": "#/properties/questions/items",
+        "type": "string",
+        "title": "The Items Schema",
+        "default": [""],
+        "examples": ["Question1", "Question2"],
+        "pattern": "^(.*)$"
+      }
+    },
+    "choices": {
+      "$id": "#/properties/choices",
+      "type": "array",
+      "title": "The Choices Schema",
+      "items": {
+        "$id": "#/properties/choices/items",
+        "type": "boolean",
+        "title": "The Items Schema",
+        "default": [true, false],
+        "examples": [true, false]
+      }
+    },
+    "answers": {
+      "$id": "#/properties/answers",
+      "type": "array",
+      "title": "The Answers Schema",
+      "default": []
+    }
+  }
+}
