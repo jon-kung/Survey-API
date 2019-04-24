@@ -26,7 +26,7 @@ class Survey {
     return result.rows[0];
   }
 
-  // getSurveyById returns a single job found by its unique id
+  // getSurveyById returns a single survey found by its unique id
   static async getSurveyById(id) {
     const result = await db.query(`SELECT * FROM surveys WHERE id=$1`, [id]);
     // This will catch errors if there are no results
@@ -51,24 +51,36 @@ class Survey {
     return result.rows[0];
   }
 
+  static async getSurveyResults() {
+
+    const result = await db.query(
+      `SELECT title, questions, answers FROM surveys`
+    );
+    // This will catch errors if there are no results
+    if (result.rows.length === 0) {
+      throw new APIError(`No surveys found, please create a survey.`);
+    }
+    return result.rows[0];
+  }
+
   // This method searches for jobs based on query string, or returns all jobs
   // Should return JSON of {jobs: [jobData, ...]}
   static async getSurveyResultById(id) {
-    let results;
+    let result;
 
     if (!Object.keys(id)) {
       // Returns title questions and choices for all surveys
-      results = await db.query(`SELECT title, questions, choices FROM surveys`);
-      return results.rows;
+      result = await db.query(`SELECT title, questions, choices FROM surveys`);
+      return result.rows;
     }
 
     //Else returns title, question, and answers where search string matches title
-    results = await db.query(
+    result = await db.query(
       `SELECT title, questions, answers FROM surveys WHERE id=$1`,
       [id]
     );
 
-    return results.rows;
+    return result.rows;
   }
 
   // delete should remove a survey from the database
