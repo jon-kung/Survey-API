@@ -48,10 +48,11 @@ class Survey {
   }
 
   // Users should be able to view survey results
-  // CONTINUE HERE!!!!!!!//////
+  // { id : 1 , yes : 0 , no : 5 }
+
   static async getSurveyResults() {
     const result = await db.query(
-      `SELECT * FROM responses`
+      `SELECT question_id, COUNT(answer), answer FROM responses GROUP BY question_id, answer`
     );
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
@@ -60,20 +61,22 @@ class Survey {
     return result.rows[0];
   }
 
-  ///////// CONTINUE HERE //////////////////
+  ///////// TEST THIS //////////////////
   static async getSurveyResultById(questionId) {
     let result;
     if (!Object.keys(questionId)) {
-      // Returns category question and choices for all surveys
+      // Returns category question and answers for all surveys
       result = await db.query(
-        `SELECT * FROM responses`
+        `SELECT question_id, COUNT(answer), answer FROM responses GROUP BY question_id, answer
+        `
       );
       return result.rows;
     }
-
-    //Else returns category, question, and answers where search string matches category
+    //Else returns specific category, question ID, and answers where question ID matches
     result = await db.query(
-      `SELECT * FROM responses WHERE question_id = $1 `, [questionId]
+      `SELECT question_id, COUNT(answer), answer FROM responses WHERE question_id = $1 GROUP BY question_id, answer
+      `,
+      [questionId]
     );
     return result.rows;
   }
