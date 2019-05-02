@@ -30,9 +30,9 @@ router.post('/', async function(req, res, next) {
   }
   // at this point in code, we know we have a valid payload
   try {
-    const { title, questions, choices } = req.body;
+    const { title, question, choices } = req.body;
     const survey = await Survey.create({
-      title, questions, choices
+      title, question, choices
     });
     return res.json({ survey });
   } catch (error) {

@@ -6,18 +6,18 @@ const APIError = require('../helpers/APIError');
 
 class Survey {
   // This method creates a new job for our jobs table, returning the new job record
-  static async create({ title, questions, choices }) {
+  static async create({ title, question, choices }) {
     const result = await db.query(
-      `INSERT INTO surveys (title, questions, choices) VALUES ($1, $2, $3) RETURNING *`,
-      [title, questions, choices]
+      `INSERT INTO surveys (title, question, choices) VALUES ($1, $2, $3) RETURNING *`,
+      [title, question, choices]
     );
     return result.rows[0];
   }
 
-  // getSurveys hsould return all surveys - title, questions, choices
+  // getSurveys hsould return all surveys - title, question, choices
   static async getSurveys() {
     const result = await db.query(
-      `SELECT title, questions, choices FROM surveys`
+      `SELECT title, question, choices FROM surveys`
     );
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
@@ -38,12 +38,10 @@ class Survey {
 
   // Users should be able to take survey
   static async updateSurveyAnswers({ id, answers }) {
-    // use sql for partialUpdate - pattern match table name, fields, primary key, and value of primary key
-
     let items = { id, answers };
     let createdSQL = sqlForPartialUpdate('surveys', items, 'id', items.id);
-
     const result = await db.query(createdSQL.query, createdSQL.values);
+    // const result = await db.query(`INSERT INTO surveys (answers) VALUES $1`, [answers])
 
     if (result.rows.length === 0) {
       throw new APIError(`No survey could be updated, no survey found :(`);
@@ -54,7 +52,7 @@ class Survey {
   static async getSurveyResults() {
 
     const result = await db.query(
-      `SELECT title, questions, answers FROM surveys`
+      `SELECT title, question, answers FROM surveys`
     );
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
@@ -69,14 +67,14 @@ class Survey {
     let result;
 
     if (!Object.keys(id)) {
-      // Returns title questions and choices for all surveys
-      result = await db.query(`SELECT title, questions, choices FROM surveys`);
+      // Returns title question and choices for all surveys
+      result = await db.query(`SELECT title, question, choices FROM surveys`);
       return result.rows;
     }
 
     //Else returns title, question, and answers where search string matches title
     result = await db.query(
-      `SELECT title, questions, answers FROM surveys WHERE id=$1`,
+      `SELECT title, question, answers FROM surveys WHERE id=$1`,
       [id]
     );
 

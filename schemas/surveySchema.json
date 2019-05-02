@@ -4,7 +4,7 @@
   "$id": "http://example.com/root.json",
   "type": "object",
   "title": "The Root Schema",
-  "required": ["id", "title", "questions", "choices"],
+  "required": ["id", "title", "question", "choices"],
   "properties": {
     "id": {
       "$id": "#/properties/id",
@@ -21,12 +21,12 @@
       "examples": ["TEST Customer Experience Survey"],
       "pattern": "^(.*)$"
     },
-    "questions": {
-      "$id": "#/properties/questions",
-      "type": "array",
-      "title": "The Questions Schema",
+    "question": {
+      "$id": "#/properties/question",
+      "type": "string",
+      "title": "The Question Schema",
       "items": {
-        "$id": "#/properties/questions/items",
+        "$id": "#/properties/question/items",
         "type": "string",
         "title": "The Items Schema",
         "default": [""],
