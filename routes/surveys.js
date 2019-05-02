@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const Survey = require('../models/survey');
-const db = require('../db');
 const { validate } = require('jsonschema');
 const surveySchema = require('../schemas/surveySchema.json');
 const APIError = require('../helpers/APIError');

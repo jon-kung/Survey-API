@@ -1,6 +1,5 @@
 //Survey model
 const db = require('../db');
-const app = require('../app');
 const APIError = require('../helpers/APIError');
 
 class Survey {
