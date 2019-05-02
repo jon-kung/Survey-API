@@ -1,9 +1,16 @@
 DROP TABLE IF EXISTS surveys;
+DROP TABLE IF EXISTS responses;
 
 CREATE TABLE surveys (
     id SERIAL PRIMARY KEY,
-    title text,
+    category text,
     question text NOT NULL,
-    choices BOOLEAN NOT NULL,
-    answers BOOLEAN[]
+    choices BOOLEAN NOT NULL
+);
+
+CREATE TABLE responses (
+    id SERIAL PRIMARY KEY,
+    question_category text,
+    question_id int NOT NULL,
+    answer BOOLEAN NOT NULL 
 );
