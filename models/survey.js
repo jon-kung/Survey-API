@@ -36,10 +36,10 @@ class Survey {
   }
 
   // Users should be able to take survey
-  static async updateSurveyAnswers({ questionId, questionCategory, answer }) {
+  static async updateSurveyAnswers({ questionId, answer }) {
     const result = await db.query(
-      `INSERT INTO responses (question_id, question_category, answer) VALUES( $1, $2, $3 ) RETURNING *`,
-      [questionId, questionCategory, answer]
+      `INSERT INTO responses (question_id, answer) VALUES( $1, $2 ) RETURNING *`,
+      [questionId, answer]
     );
     if (result.rows.length === 0) {
       throw new APIError(`No survey could be updated, no survey found :(`);
