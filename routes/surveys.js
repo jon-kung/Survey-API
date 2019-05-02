@@ -32,7 +32,9 @@ router.post('/', async function(req, res, next) {
   try {
     const { category, question, choices } = req.body;
     const survey = await Survey.create({
-      category, question, choices
+      category,
+      question,
+      choices
     });
     return res.json({ survey });
   } catch (error) {
@@ -52,8 +54,8 @@ router.get('/:id', async function(req, res, next) {
   }
 });
 
-// This route should update a survey's answers
-router.patch('/:id', async function(req, res, next) {
+// This route should allow someone to take a survey
+router.post('/take/:id', async function(req, res, next) {
   const result = validate(req.body, surveySchema);
   if (!result.valid) {
     // pass validation errors to error handler
@@ -63,13 +65,14 @@ router.patch('/:id', async function(req, res, next) {
     return next(error);
   }
   // at this point in code, we know we have a valid payload
-  const id = req.params.id;
-  const { answers } = req.body;
+  // !!! Check if Question Category exists
+  const questionId = req.params.id;
+  const { answer } = req.body;
 
   try {
     const survey = await Survey.updateSurveyAnswers({
-      id,
-      answers
+      questionId,
+      answer
     });
     return res.json({ survey });
   } catch (err) {
