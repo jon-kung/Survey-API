@@ -10,7 +10,6 @@ CREATE TABLE surveys (
 
 CREATE TABLE responses (
     id SERIAL PRIMARY KEY,
-    question_category text,
     question_id int NOT NULL,
     answer BOOLEAN NOT NULL 
 );
