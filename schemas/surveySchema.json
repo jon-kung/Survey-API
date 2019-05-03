@@ -4,35 +4,41 @@
   "$id": "http://example.com/root.json",
   "type": "object",
   "title": "The Root Schema",
-  "required": ["id", "title", "question", "choices"],
+  "required": [
+    "id",
+    "category",
+    "question",
+    "choices"
+  ],
   "properties": {
     "id": {
       "$id": "#/properties/id",
       "type": "integer",
       "title": "The Id Schema",
       "default": 0,
-      "examples": [1]
+      "examples": [
+        1
+      ]
     },
-    "title": {
-      "$id": "#/properties/title",
+    "category": {
+      "$id": "#/properties/category",
       "type": "string",
-      "title": "The Title Schema",
-      "default": "Enter Survey Title",
-      "examples": ["TEST Customer Experience Survey"],
+      "title": "The Category Schema",
+      "default": "",
+      "examples": [
+        "test_category"
+      ],
       "pattern": "^(.*)$"
     },
     "question": {
       "$id": "#/properties/question",
       "type": "string",
       "title": "The Question Schema",
-      "items": {
-        "$id": "#/properties/question/items",
-        "type": "string",
-        "title": "The Items Schema",
-        "default": [""],
-        "examples": ["Question1", "Question2"],
-        "pattern": "^(.*)$"
-      }
+      "default": "",
+      "examples": [
+        "This is a test question"
+      ],
+      "pattern": "^(.*)$"
     },
     "choices": {
       "$id": "#/properties/choices",
@@ -42,15 +48,12 @@
         "$id": "#/properties/choices/items",
         "type": "boolean",
         "title": "The Items Schema",
-        "default": [true, false],
-        "examples": [true, false]
+        "default": false,
+        "examples": [
+          true,
+          false
+        ]
       }
-    },
-    "answers": {
-      "$id": "#/properties/answers",
-      "type": "array",
-      "title": "The Answers Schema",
-      "default": []
     }
   }
 }
