@@ -47,8 +47,6 @@ class Survey {
   }
 
   // Users should be able to view survey results
-  // { id : 1 , yes : 0 , no : 5 }
-
   static async getSurveyResults() {
     const result = await db.query(
       `SELECT question_id, COUNT(answer), answer FROM responses GROUP BY question_id, answer`
@@ -60,7 +58,6 @@ class Survey {
     return result.rows[0];
   }
 
-  ///////// TEST THIS //////////////////
   static async getSurveyResultById(questionId) {
     let result;
     if (!Object.keys(questionId)) {
