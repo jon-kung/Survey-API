@@ -5,7 +5,7 @@ CREATE TABLE surveys (
     id SERIAL PRIMARY KEY,
     category text,
     question text NOT NULL,
-    choices BOOLEAN NOT NULL
+    choices BOOLEAN[] NOT NULL
 );
 
 CREATE TABLE responses (
