@@ -71,7 +71,7 @@ class Survey {
       );
       return result.rows;
     }
-    //Else returns specific category, question ID, and answers where question ID matches
+    //Else returns  question ID and answers based on question ID provided
     result = await db.query(
       `SELECT question_id, COUNT(answer), answer FROM responses WHERE question_id = $1 GROUP BY question_id, answer
       `,

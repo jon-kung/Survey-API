@@ -55,19 +55,8 @@ router.get('/:id', async function(req, res, next) {
 
 // This route should allow someone to take a survey
 router.post('/take/:id', async function(req, res, next) {
-  const result = validate(req.body, surveySchema);
-  if (!result.valid) {
-    // pass validation errors to error handler
-    let message = result.errors.map(error => error.stack);
-    let status = 404;
-    let error = new APIError(message, status);
-    return next(error);
-  }
-  // at this point in code, we know we have a valid payload
-  // !!! Check if Question Category exists
   const questionId = req.params.id;
   const { answer } = req.body;
-
   try {
     const survey = await Survey.updateSurveyAnswers({
       questionId,
