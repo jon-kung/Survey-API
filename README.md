@@ -1,10 +1,10 @@
 ### Survey API
 Allows anonymous taking of surveys, responds with JSON
-Uses Postgresql
+Uses JSON server
 
 ### Setup
 1) npm i
-2) nodemon
+2) npm start
 
 ### Endpoints
 1) /surveys (get) To view all surveys
