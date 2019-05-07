@@ -30,8 +30,8 @@
       "id": 2,
       "survey_id": 2,
       "answers": [
-        { "question_id": 1, "value": false },
-        { "question_id": 2, "value": true }
+        { "question_id": 3, "value": false },
+        { "question_id": 4, "value": true }
       ]
     }
   ]
