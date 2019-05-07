@@ -1,18 +1,26 @@
 {
   "surveys": [
-    { "id": 1, "name": "Food Survey" },
-    { "id": 2, "name": "Animal Survey" }
-  ],
-  "questions": [
-    { "id": 1, "survey_id": 1, "question": "Do you like pancakes?" },
-    { "id": 2, "survey_id": 1, "question": "Do you like bananas?" },
-    { "id": 3, "survey_id": 2, "question": "Do you like dogs?" },
-    { "id": 4, "survey_id": 2, "question": "Do you like cats?" }
+    {
+      "id": 1,
+      "name": "Food Survey",
+      "questions": [
+        { "id": 1, "question": "Do you like pancakes?" },
+        { "id": 2, "question": "Do you like bananas?" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Animal Survey",
+      "questions": [
+        { "id": 3, "question": "Do you like dogs?" },
+        { "id": 4, "question": "Do you like cats?" }
+      ]
+    }
   ],
   "responses": [
-    { "id": 1, "question_id": 1, "answer": true },
-    { "id": 2, "question_id": 2, "answer": true },
-    { "id": 3, "question_id": 3, "answer": true },
-    { "id": 4, "question_id": 4, "answer": false }
+    { "id": 1, "survey_id": 1, "question_id": 1, "answer": true },
+    { "id": 2, "survey_id": 1, "question_id": 2, "answer": true },
+    { "id": 3, "survey_id": 2, "question_id": 3, "answer": true },
+    { "id": 4, "survey_id": 2, "question_id": 4, "answer": false }
   ]
 }
