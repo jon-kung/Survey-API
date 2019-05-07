@@ -11,8 +11,8 @@ const BASE_API_URL = 'http://localhost:3000';
 
 class SurveyApi {
   // Create a survey
-  static async addSurvey(surveyName, questions) {
-    let data = {surveyName, questions}
+  static async addSurvey(surveyName, questionsArray) {
+    let data = { name: surveyName, questions: questionsArray };
     const result = await axios.post(`${BASE_API_URL}/surveys`, data, 'post');
     return result.data;
   }
@@ -23,13 +23,16 @@ class SurveyApi {
     return result.data;
   }
   // Show one survey with all its questions
-  static async getSurveyById(surveyId){
+  static async getSurveyById(surveyId) {
     const result = await axios.get(`${BASE_API_URL}/surveys?id=${surveyId}`);
     return result.data;
   }
   // Take a survey - adds data to responses
   static async takeSurvey(surveyId, questionId, answer) {
-    let data = {surveyId, questionId, answer}
+    let data = {
+      surveyId,
+      answers: [{ question_id: questionId, value: answer }]
+    };
     const result = await axios.post(`${BASE_API_URL}/responses`, data, 'post');
     return result.data;
   }
@@ -45,7 +48,6 @@ class SurveyApi {
     const result = await axios.get(`${BASE_API_URL}/responses?id=${surveyId}`);
     return result.data;
   }
-
 }
 
 export default SurveyApi;
