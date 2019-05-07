@@ -18,9 +18,21 @@
     }
   ],
   "responses": [
-    { "id": 1, "survey_id": 1, "question_id": 1, "answer": true },
-    { "id": 2, "survey_id": 1, "question_id": 2, "answer": true },
-    { "id": 3, "survey_id": 2, "question_id": 3, "answer": true },
-    { "id": 4, "survey_id": 2, "question_id": 4, "answer": false }
+    {
+      "id": 1,
+      "survey_id": 1,
+      "answers": [
+        { "question_id": 1, "value": true },
+        { "question_id": 2, "value": false }
+      ]
+    },
+    {
+      "id": 2,
+      "survey_id": 2,
+      "answers": [
+        { "question_id": 1, "value": false },
+        { "question_id": 2, "value": true }
+      ]
+    }
   ]
 }
