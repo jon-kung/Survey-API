@@ -1,7 +1,7 @@
 import axios from 'axios';
 const BASE_API_URL = 'http://localhost:3000';
 
-// This file would be used to connect to a front-end
+// This file would be used to connect to a front-end, at the moment json-server is handling all the routes
 
 // API Should Support:
 // Creating a survey
