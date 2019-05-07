@@ -7,10 +7,10 @@ Uses JSON server
 2) npm start
 
 ### Endpoints
-1) /surveys (get) To view all surveys
-2) /surveys (post) To add a new survey
-3) /surveys/:id (get) To view one survey by ID
-4) /surveys/take/:id (post) To take a survey by ID
-5) /surveys/results (get) To view results of all surveys
-6) /surveys/results/:id (get) To view results of a specific survey
-7) /surveys/:id (delete) To remove a survey
+1) http://localhost:3000/ (get) To view directory
+2) http://localhost:3000/surveys (post) To add a new survey
+3) http://localhost:3000/surveys (get) To view all surveys
+4) http://localhost:3000/surveys?id=1 (get) To view a survey by ID
+5) http://localhost:3000/responses?id=1 (post) To take a survey by ID
+6) http://localhost:3000/responses/ (get) To view results of all surveys
+7) http://localhost:3000/responses?id=1 (get) To view results of a specific survey
