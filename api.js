@@ -26,8 +26,8 @@ class SurveyApi {
     return result.data;
   }
   // Take a survey - adds data to responses
-  static async takeSurvey(questionId, answer) {
-    let data = {questionId, answer}
+  static async takeSurvey(surveyId, questionId, answer) {
+    let data = {surveyId, questionId, answer}
     const result = await axios.post(`${BASE_API_URL}/responses`, data, 'post');
     return result.data;
   }
@@ -40,7 +40,7 @@ class SurveyApi {
 
   // Shows a specific response by survey id
   static async getResult(surveyId) {
-    const result = await axios.get(`${BASE_API_URL}/responses?survey_id=${surveyId}`);
+    const result = await axios.get(`${BASE_API_URL}/responses?id=${surveyId}`);
     return result.data;
   }
 
