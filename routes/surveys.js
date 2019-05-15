@@ -6,6 +6,7 @@ const Question = require('../models/question');
 const { validate } = require('jsonschema');
 const surveySchema = require('../schemas/surveySchema.json');
 const questionSchema = require('../schemas/surveySchema.json');
+const responseSchema = require('../schemas/responseSchema.json');
 const APIError = require('../helpers/APIError');
 
 // This route should show all surveys
@@ -77,6 +78,14 @@ router.get('/:surveyId', async function(req, res, next) {
 router.post('/take/:id', async function(req, res, next) {
   const questionId = req.params.id;
   const { answer } = req.body;
+  const result = validate(req.body, responseSchema);
+  if (!result.valid) {
+    // pass validation errors to error handler
+    let message = result.errors.map(error => error.stack);
+    let status = 404;
+    let error = new APIError(message, status);
+    return next(error);
+  }
   try {
     const survey = await Question.answerQuestion(questionId, answer);
     return res.json({ survey });
