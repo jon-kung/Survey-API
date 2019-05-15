@@ -4,6 +4,11 @@
   "$id": "http://example.com/root.json",
   "type": "object",
   "title": "The Root Schema",
+  "required": [
+    "id",
+    "survey_id",
+    "question"
+  ],
   "properties": {
     "id": {
       "$id": "#/properties/id",
@@ -14,18 +19,24 @@
         1
       ]
     },
-    "name": {
-      "$id": "#/properties/name",
+    "survey_id": {
+      "$id": "#/properties/survey_id",
+      "type": "integer",
+      "title": "The Survey_id Schema",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "question": {
+      "$id": "#/properties/question",
       "type": "string",
-      "title": "The Name Schema",
+      "title": "The Question Schema",
       "default": "",
       "examples": [
-        "My First Survey"
+        "Do you like bananas?"
       ],
       "pattern": "^(.*)$"
     }
-  },
-  "required": [
-    "name"
-  ]
+  }
 }

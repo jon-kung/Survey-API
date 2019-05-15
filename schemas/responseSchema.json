@@ -1,0 +1,41 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "id",
+    "question_id",
+    "answer"
+  ],
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "question_id": {
+      "$id": "#/properties/question_id",
+      "type": "integer",
+      "title": "The Question_id Schema",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "answer": {
+      "$id": "#/properties/answer",
+      "type": "boolean",
+      "title": "The Answer Schema",
+      "default": false,
+      "examples": [
+        true
+      ]
+    }
+  }
+}
