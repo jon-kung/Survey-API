@@ -4,10 +4,10 @@ const APIError = require('../helpers/APIError');
 
 class Survey {
   // Users should be able to create a survey
-  static async create({ category, question, choices }) {
+  static async create({ surveyName }) {
     const result = await db.query(
-      `INSERT INTO surveys (category, question, choices) VALUES ($1, $2, $3) RETURNING *`,
-      [category, question, choices]
+      `INSERT INTO surveys (survey_name) VALUES ($1) RETURNING *`,
+      [surveyName]
     );
     return result.rows[0];
   }
@@ -15,7 +15,7 @@ class Survey {
   // Users should be able to view all surveys
   static async getSurveys() {
     const result = await db.query(
-      `SELECT category, question, choices FROM surveys`
+      `SELECT * FROM surveys`
     );
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
@@ -34,17 +34,18 @@ class Survey {
     return result.rows[0];
   }
 
-  // Users should be able to take survey
-  static async updateSurveyAnswers({ questionId, answer }) {
-    const result = await db.query(
-      `INSERT INTO responses (question_id, answer) VALUES( $1, $2 ) RETURNING *`,
-      [questionId, answer]
-    );
-    if (result.rows.length === 0) {
-      throw new APIError(`No survey could be updated, no survey found :(`);
-    }
-    return result.rows[0];
-  }
+  // // Users should be able to take survey 
+  // ****** MOVING THIS TO QUESTION MODEL **********
+  // static async updateSurveyAnswers({ questionId, answer }) {
+  //   const result = await db.query(
+  //     `INSERT INTO responses (question_id, answer) VALUES( $1, $2 ) RETURNING *`,
+  //     [questionId, answer]
+  //   );
+  //   if (result.rows.length === 0) {
+  //     throw new APIError(`No survey could be updated, no survey found :(`);
+  //   }
+  //   return result.rows[0];
+  // }
 
   // Users should be able to view survey results
   static async getSurveyResults() {
@@ -61,14 +62,14 @@ class Survey {
   static async getSurveyResultById(questionId) {
     let result;
     if (!Object.keys(questionId)) {
-      // Returns category question and answers for all surveys
+      // If no ID is provided, returns category question and answers for all surveys
       result = await db.query(
         `SELECT question_id, COUNT(answer), answer FROM responses GROUP BY question_id, answer
         `
       );
       return result.rows;
     }
-    //Else returns  question ID and answers based on question ID provided
+    //Else returns question ID and number of True/False answers based on question ID provided
     result = await db.query(
       `SELECT question_id, COUNT(answer), answer FROM responses WHERE question_id = $1 GROUP BY question_id, answer
       `,
