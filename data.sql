@@ -9,7 +9,7 @@ CREATE TABLE surveys (
 
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
-    survey_id int NOT NULL FOREIGN KEY REFERENCES surveys,
+    survey_id int NOT NULL FOREIGN KEY REFERENCES surveys ON DELETE CASCADE,
     question text
 );
 
