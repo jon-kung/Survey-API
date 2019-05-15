@@ -7,10 +7,18 @@ Uses Postgresql
 2) nodemon
 
 ### Endpoints
-1) /surveys (get) To view all surveys
-2) /surveys (post) To add a new survey
-3) /surveys/:id (get) To view one survey by ID
-4) /surveys/take/:id (post) To take a survey by ID
-5) /surveys/results (get) To view results of all surveys
-6) /surveys/results/:id (get) To view results of a specific survey
-7) /surveys/:id (delete) To remove a survey
+1) /surveys (GET) To view all available surveys
+2) /surveys/:id (GET) To view all questions from a specific survey using a survey id
+3) /surveys/results (GET) To view results of all surveys
+4) /surveys/results/:id (GET) To view results of a specific survey using a survey id
+
+5) /surveys (POST) To add a new survey
+6) /surveys/:id (POST) To add a question under a specific survey's id
+7) /surveys/take/:id (POST) To take a survey's question using a question id
+
+8) /surveys/:id (DELETE) To remove a survey
+9) /surveys/question/:id (DELETE) To remove a question
+
+## Pending features
+Integration tests for routes
+Seed file for dummy/test data
