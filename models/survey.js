@@ -4,7 +4,7 @@ const APIError = require('../helpers/APIError');
 
 class Survey {
   // Users should be able to create a survey
-  static async create({ surveyName }) {
+  static async create( surveyName ) {
     const result = await db.query(
       `INSERT INTO surveys (survey_name) VALUES ($1) RETURNING *`,
       [surveyName]
@@ -33,19 +33,6 @@ class Survey {
     }
     return result.rows[0];
   }
-
-  // // Users should be able to take survey 
-  // ****** MOVING THIS TO QUESTION MODEL **********
-  // static async updateSurveyAnswers({ questionId, answer }) {
-  //   const result = await db.query(
-  //     `INSERT INTO responses (question_id, answer) VALUES( $1, $2 ) RETURNING *`,
-  //     [questionId, answer]
-  //   );
-  //   if (result.rows.length === 0) {
-  //     throw new APIError(`No survey could be updated, no survey found :(`);
-  //   }
-  //   return result.rows[0];
-  // }
 
   // Users should be able to view survey results
   static async getSurveyResults() {
@@ -78,7 +65,7 @@ class Survey {
     return result.rows;
   }
 
-  // delete should remove a survey from the database
+  // remove a survey from the database
   static async delete(id) {
     const result = await db.query(
       `DELETE FROM surveys WHERE id=$1 RETURNING *`,

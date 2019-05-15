@@ -19,13 +19,13 @@ class Question {
     );
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
-      throw new APIError(`No surveys found, please create a survey.`);
+      throw new APIError(`No questions found, please create a survey.`);
     }
     return result.rows[0];
   }
 
   // Users should be able to see all questions from a specific survey
-  static async getQuestionById(surveyId) {
+  static async getQuestionsFromSurvey(surveyId) {
     const result = await db.query(`SELECT * FROM questions WHERE survey_id=$1`, [surveyId]);
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
@@ -35,7 +35,7 @@ class Question {
   }
 
   // Users should be able to answer a survey's questions
-  static async answerQuestion({ questionId, answer }) {
+  static async answerQuestion( questionId, answer ) {
     const result = await db.query(
       `INSERT INTO responses (question_id, answer) VALUES( $1, $2 ) RETURNING *`,
       [questionId, answer]
