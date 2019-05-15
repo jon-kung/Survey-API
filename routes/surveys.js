@@ -2,8 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const Survey = require('../models/survey');
+const Question = require('../models/question');
 const { validate } = require('jsonschema');
 const surveySchema = require('../schemas/surveySchema.json');
+const questionSchema = require('../schemas/surveySchema.json');
 const APIError = require('../helpers/APIError');
 
 // This route should show all surveys
@@ -29,12 +31,8 @@ router.post('/', async function(req, res, next) {
   }
   // at this point in code, we know we have a valid payload
   try {
-    const { category, question, choices } = req.body;
-    const survey = await Survey.create({
-      category,
-      question,
-      choices
-    });
+    const { surveyName } = req.body;
+    const survey = await Survey.create(surveyName);
     return res.json({ survey });
   } catch (error) {
     error.status = 409;
@@ -42,10 +40,32 @@ router.post('/', async function(req, res, next) {
   }
 });
 
-// This route should return a single survey found by its id.
-router.get('/:id', async function(req, res, next) {
+// this route adds a new question to a survey
+router.post('/:id', async function(req, res, next) {
+  const result = validate(req.body, questionSchema);
+  if (!result.valid) {
+    // pass validation errors to error handler
+    let message = result.errors.map(error => error.stack);
+    let status = 404;
+    let error = new APIError(message, status);
+    return next(error);
+  }
+  // at this point in code, we know we have a valid payload
   try {
-    let survey = await Survey.getSurveyById(req.params.id);
+    const surveyId = req.params.id;
+    const { question } = req.body;
+    const survey = await Question.create(surveyId, question);
+    return res.json({ survey });
+  } catch (error) {
+    error.status = 409;
+    return next(error);
+  }
+});
+
+// This route should return all questions from a specific survey.
+router.get('/:surveyId', async function(req, res, next) {
+  try {
+    let survey = await Question.getQuestionsFromSurvey(req.params.surveyId);
     return res.json({ survey });
   } catch (err) {
     err.status = 404;
@@ -58,10 +78,7 @@ router.post('/take/:id', async function(req, res, next) {
   const questionId = req.params.id;
   const { answer } = req.body;
   try {
-    const survey = await Survey.updateSurveyAnswers({
-      questionId,
-      answer
-    });
+    const survey = await Question.answerQuestion(questionId, answer);
     return res.json({ survey });
   } catch (err) {
     err.status = 404;
@@ -101,5 +118,18 @@ router.delete('/:id', async function(req, res, next) {
     return next(err);
   }
 });
+
+// This route should remove a question by the ID provided
+router.delete('/question/:id', async function(req, res, next) {
+  try {
+    await Question.delete(req.params.id);
+    return res.json({ message: 'Survey deleted' });
+  } catch (err) {
+    err.status = 404;
+    return next(err);
+  }
+});
+
+
 
 module.exports = router;
