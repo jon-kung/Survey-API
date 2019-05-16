@@ -9,13 +9,13 @@ CREATE TABLE surveys (
 
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
-    survey_id int NOT NULL FOREIGN KEY REFERENCES surveys ON DELETE CASCADE,
+    survey_id int NOT NULL REFERENCES surveys ON DELETE CASCADE,
     question text
 );
 
 CREATE TABLE responses (
     id SERIAL PRIMARY KEY,
-    question_id int NOT NULL FOREIGN KEY REFERENCES questions,
+    question_id int NOT NULL REFERENCES questions,
     answer BOOLEAN 
 );
 
