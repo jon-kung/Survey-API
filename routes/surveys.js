@@ -54,9 +54,9 @@ router.post('/:id', async function(req, res, next) {
   // at this point in code, we know we have a valid payload
   try {
     const surveyId = req.params.id;
-    const { question } = req.body;
-    const survey = await Question.create(surveyId, question);
-    return res.json({ survey });
+    const { questionText } = req.body;
+    const question = await Question.create(surveyId, questionText);
+    return res.json({ question });
   } catch (error) {
     error.status = 409;
     return next(error);
@@ -66,8 +66,8 @@ router.post('/:id', async function(req, res, next) {
 // This route should return all questions from a specific survey.
 router.get('/:surveyId', async function(req, res, next) {
   try {
-    let survey = await Question.getQuestionsFromSurvey(req.params.surveyId);
-    return res.json({ survey });
+    let questions = await Question.getQuestionsFromSurvey(req.params.surveyId);
+    return res.json({ questions });
   } catch (err) {
     err.status = 404;
     return next(err);
@@ -87,8 +87,8 @@ router.post('/take/:id', async function(req, res, next) {
     return next(error);
   }
   try {
-    const survey = await Question.answerQuestion(questionId, answer);
-    return res.json({ survey });
+    const response = await Question.answerQuestion(questionId, answer);
+    return res.json({ response });
   } catch (err) {
     err.status = 404;
     return next(err);
@@ -98,8 +98,8 @@ router.post('/take/:id', async function(req, res, next) {
 // This route should get all survey results
 router.get('/results', async function(req, res, next) {
   try {
-    let surveys = await Survey.getSurveyResults();
-    return res.json({ surveys });
+    let responses = await Survey.getSurveyResults();
+    return res.json({ responses });
   } catch (err) {
     err.status = 404;
     return next(err);
