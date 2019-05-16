@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS surveys;
-DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS responses;
+DROP TABLE IF EXISTS questions;
+DROP TABLE IF EXISTS surveys;
 
 CREATE TABLE surveys (
     id SERIAL PRIMARY KEY,
@@ -15,7 +15,7 @@ CREATE TABLE questions (
 
 CREATE TABLE responses (
     id SERIAL PRIMARY KEY,
-    question_id int NOT NULL REFERENCES questions,
+    question_id int NOT NULL REFERENCES questions ON DELETE CASCADE,
     answer BOOLEAN 
 );
 
