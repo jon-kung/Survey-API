@@ -15,7 +15,7 @@ router.get('/', async function(req, res, next) {
     let surveys = await Survey.getSurveys();
     return res.json({ surveys });
   } catch (err) {
-    err.status = 400;
+    err.status = 404;
     return next(err);
   }
 });
@@ -96,7 +96,7 @@ router.post('/take/:id', async function(req, res, next) {
 });
 
 // This route should get all survey results
-router.get('/results', async function(req, res, next) {
+router.get('/results/all', async function(req, res, next) {
   try {
     let responses = await Survey.getSurveyResults();
     return res.json({ responses });
@@ -106,11 +106,11 @@ router.get('/results', async function(req, res, next) {
   }
 });
 
-// This route should get a survey's results by ID
+// This route should get a survey's results by ID, or all results
 router.get('/results/:id', async function(req, res, next) {
   try {
-    let survey = await Survey.getSurveyResultById(req.params.id);
-    return res.json({ survey });
+    let responses = await Survey.getSurveyResultById(req.params.id);
+    return res.json({ responses });
   } catch (err) {
     err.status = 404;
     return next(err);
