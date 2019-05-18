@@ -21,47 +21,63 @@ class Survey {
     if (result.rows.length === 0) {
       throw new APIError(`No surveys found, please create a survey.`);
     }
-    return result.rows[0];
+    return result.rows;
   }
 
-  // Users should be able to get a survey by ID
-  static async getSurveyById(id) {
-    const result = await db.query(`SELECT * FROM surveys WHERE id=$1`, [id]);
-    // This will catch errors if there are no results
-    if (result.rows.length === 0) {
-      throw new APIError(`No survey found with that id :(`);
-    }
-    return result.rows[0];
-  }
+  // // Users should be able to get a survey by ID
+  // static async getSurveyById(id) {
+  //   const result = await db.query(`SELECT * FROM surveys WHERE id=$1`, [id]);
+  //   // This will catch errors if there are no results
+  //   if (result.rows.length === 0) {
+  //     throw new APIError(`No survey found with that id :(`);
+  //   }
+  //   return result.rows[0];
+  // }
 
-  // Users should be able to view survey results
+  // Users should be able to view all survey results
   static async getSurveyResults() {
     const result = await db.query(
-      `SELECT question_id, COUNT(answer), answer FROM responses GROUP BY question_id, answer`
-    );
+      `SELECT survey_id, responses.id, question_id, COUNT(answer), answer FROM responses 
+      JOIN questions ON questions.id = responses.question_id
+      JOIN surveys ON surveys.id = questions.survey_id
+      GROUP BY responses.id, question_id, survey_id, answer
+      ORDER BY survey_id;
+      `   );
     // This will catch errors if there are no results
     if (result.rows.length === 0) {
       throw new APIError(`No responses found, please take a survey :)`);
     }
-    return result.rows[0];
+    return result.rows;
   }
 
-  static async getSurveyResultById(questionId) {
+  // TESTING -- should return all survey responses from a survey
+  static async getSurveyResultById(id) {
     let result;
-    if (!Object.keys(questionId)) {
+    if (!Object.keys(id)) {
       // If no ID is provided, returns category question and answers for all surveys
       result = await db.query(
-        `SELECT question_id, COUNT(answer), answer FROM responses GROUP BY question_id, answer
+        `SELECT survey_id, responses.id, question_id, COUNT(answer), answer FROM responses 
+        JOIN questions ON questions.id = responses.question_id
+        JOIN surveys ON surveys.id = questions.survey_id
+        GROUP BY responses.id, question_id, survey_id, answer
+        ORDER BY survey_id;
         `
       );
       return result.rows;
     }
     //Else returns question ID and number of True/False answers based on question ID provided
     result = await db.query(
-      `SELECT question_id, COUNT(answer), answer FROM responses WHERE question_id = $1 GROUP BY question_id, answer
+      `SELECT survey_id, responses.id, question_id, COUNT(answer), answer FROM responses 
+      JOIN questions ON questions.id = responses.question_id
+      JOIN surveys ON surveys.id = questions.survey_id
+      WHERE survey_id = $1
+      GROUP BY responses.id, question_id, survey_id, answer
       `,
-      [questionId]
+      [id]
     );
+    if (result.rows.length === 0) {
+      throw new APIError(`No survey found with that ID :(`);
+    }
     return result.rows;
   }
 
