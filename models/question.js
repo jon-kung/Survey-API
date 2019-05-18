@@ -12,17 +12,17 @@ class Question {
     return result.rows[0];
   }
 
-  // Users should be able to view all questions
-  static async getQuestions() {
-    const result = await db.query(
-      `SELECT * FROM questions`
-    );
-    // This will catch errors if there are no results
-    if (result.rows.length === 0) {
-      throw new APIError(`No questions found, please create a survey.`);
-    }
-    return result.rows[0];
-  }
+  // // Users should be able to view all questions
+  // static async getQuestions() {
+  //   const result = await db.query(
+  //     `SELECT * FROM questions`
+  //   );
+  //   // This will catch errors if there are no results
+  //   if (result.rows.length === 0) {
+  //     throw new APIError(`No questions found, please create a survey.`);
+  //   }
+  //   return result.rows;
+  // }
 
   // Users should be able to see all questions from a specific survey
   static async getQuestionsFromSurvey(surveyId) {
@@ -31,7 +31,7 @@ class Question {
     if (result.rows.length === 0) {
       throw new APIError(`No survey found with that id :(`);
     }
-    return result.rows[0];
+    return result.rows;
   }
 
   // Users should be able to answer a survey's questions
@@ -41,7 +41,7 @@ class Question {
       [questionId, answer]
     );
     if (result.rows.length === 0) {
-      throw new APIError(`No survey could be updated, no survey found :(`);
+      throw new APIError(`No question found with that ID :(`);
     }
     return result.rows[0];
   }
