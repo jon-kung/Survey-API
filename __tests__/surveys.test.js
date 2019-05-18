@@ -244,7 +244,7 @@ describe('GET /surveys/:id', function() {
 afterEach(async function() {
   // await db.query('DELETE FROM responses');
   // await db.query('DELETE FROM questions');
-  await db.query('DELETE FROM surveys');
+  await db.query('DELETE FROM surveys WHERE id = 255');
 });
 
 afterAll(async function() {
