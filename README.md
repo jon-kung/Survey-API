@@ -23,7 +23,7 @@ $pg_ctl -D /usr/local/var/postgres start && brew services start postgresql
 ### Endpoints
 1) /surveys (GET) To view all available surveys
 2) /surveys/:id (GET) To view all questions from a specific survey using a survey id
-3) /surveys/results (GET) To view results of all surveys
+3) /surveys/results/all (GET) To view results of all surveys
 4) /surveys/results/:id (GET) To view results of a specific survey using a survey id
 
 5) /surveys (POST) To add a new survey
