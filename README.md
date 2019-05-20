@@ -33,6 +33,5 @@ $pg_ctl -D /usr/local/var/postgres start && brew services start postgresql
 8) /surveys/:id (DELETE) To remove a survey
 9) /surveys/question/:id (DELETE) To remove a question
 
-## Pending features
-Integration tests for routes
-Seed file for dummy/test data
+## Running Tests
+$npm test
