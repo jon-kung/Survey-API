@@ -14,7 +14,7 @@
         1
       ]
     },
-    "name": {
+    "survey_name": {
       "$id": "#/properties/name",
       "type": "string",
       "title": "The Name Schema",
@@ -26,6 +26,6 @@
     }
   },
   "required": [
-    "name"
+    "survey_name"
   ]
 }
