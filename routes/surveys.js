@@ -26,14 +26,14 @@ router.post('/', async function(req, res, next) {
   if (!result.valid) {
     // pass validation errors to error handler
     let message = result.errors.map(error => error.stack);
-    let status = 404;
+    let status = 400;
     let error = new APIError(message, status);
     return next(error);
   }
   // at this point in code, we know we have a valid payload
   try {
-    const { surveyName } = req.body;
-    const survey = await Survey.create(surveyName);
+    const { survey_name } = req.body;
+    const survey = await Survey.create(survey_name);
     return res.json({ survey });
   } catch (error) {
     error.status = 409;
@@ -47,16 +47,16 @@ router.post('/:id', async function(req, res, next) {
   if (!result.valid) {
     // pass validation errors to error handler
     let message = result.errors.map(error => error.stack);
-    let status = 404;
+    let status = 400;
     let error = new APIError(message, status);
     return next(error);
   }
   // at this point in code, we know we have a valid payload
   try {
-    const surveyId = req.params.id;
-    const { questionText } = req.body;
-    const question = await Question.create(surveyId, questionText);
-    return res.json({ question });
+    const id = req.params.id;
+    const { question } = req.body;
+    const questions = await Question.create(id, question);
+    return res.json({ questions });
   } catch (error) {
     error.status = 409;
     return next(error);
@@ -82,7 +82,7 @@ router.post('/take/:id', async function(req, res, next) {
   if (!result.valid) {
     // pass validation errors to error handler
     let message = result.errors.map(error => error.stack);
-    let status = 404;
+    let status = 400;
     let error = new APIError(message, status);
     return next(error);
   }
@@ -138,7 +138,5 @@ router.delete('/question/:id', async function(req, res, next) {
     return next(err);
   }
 });
-
-
 
 module.exports = router;
