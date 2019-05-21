@@ -4,7 +4,7 @@ const APIError = require('../helpers/APIError');
 
 class Question {
   // Users should be able to create a question for a survey
-  static async create({ surveyId, question }) {
+  static async create( surveyId, question ) {
     const result = await db.query(
       `INSERT INTO questions (survey_id, question) VALUES ($1, $2) RETURNING *`,
       [surveyId, question]
