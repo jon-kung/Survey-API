@@ -6,23 +6,18 @@ const app = require('../app');
 const db = require('../db');
 
 beforeEach(async () => {
-  
   let surveyData = await db.query(` INSERT INTO 
     surveys (id, survey_name)   
     VALUES( 255, 'My Test Survey' ) RETURNING *`);
-
   let questionData = await db.query(`INSERT INTO 
     questions (id, survey_id, question)   
     VALUES( 255, 255, 'Do you like testing?') RETURNING *`);
-
   let responseData = await db.query(`INSERT INTO 
     responses (id, question_id, answer)   
     VALUES( 255, 255, false ) RETURNING *`);
-
-  let surveys = surveyData.rows[0];
-  let questions = questionData.rows[0];
-  let responses = responseData.rows[0];
 });
+
+// ************** BEGINNING of tests for GET routes **************
 
 // TESTING route for getting all surveys
 describe('GET /surveys', function() {
@@ -62,165 +57,127 @@ describe('GET /surveys/:id', function() {
     expect(response.body).toHaveProperty('error');
   });
 });
-/////
 
-// describe('GET query string params', async function() {
-//   // TESTING route for getting specific companies with a search query
-//   describe('GET /companies?search', async function() {
-//     test('gets specific company(s) with query of name or handle', async function() {
-//       const response = await request(app)
-//         .get(`/companies?search=testCompany`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies[0].name).toBe('testCompany');
-//     });
-//     // Testing for no results from query
-//     test('Responds with 200 if no company is found', async function() {
-//       const response = await request(app)
-//         .get(`/companies?search=BADSEARCH`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies).toEqual([]);
-//     });
-//   });
+// TESTING route for getting results of all surveys
+describe('GET /surveys/results/all', function() {
+  test('gets all survey results', async function() {
+    const response = await request(app)
+      .get(`/surveys/results/all`)
+    expect(response.statusCode).toBe(200);
+    expect(response.body.responses[0]).toHaveProperty('id');
+    expect(response.body.responses[0]).toHaveProperty('question_id');
+    expect(response.body.responses[0]).toHaveProperty('answer');
+    expect(response.body.responses[0].question_id).toEqual(255);
+    expect(response.body.responses[0].answer).toEqual(false);
+  });
+  // Testing for no results from query
+  test('Responds with 404 if no response is found in the database', async function() {
+    await db.query('DELETE FROM surveys');
+    const response = await request(app)
+      .get(`/surveys/results/all`)
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty('error');
+  });
+});
 
-//   // TESTING route to find a company with min employee count of query
-//   describe('GET /companies?min_employees', async function() {
-//     test('gets specific company(s) with query of min_employees', async function() {
-//       const response = await request(app)
-//         .get(`/companies?min_employees=99`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies[0].name).toBe('testCompany');
-//     });
-//     // Testing for no results from query
-//     test('Responds with 200 if no company is found', async function() {
-//       const response = await request(app)
-//         .get(`/companies?min_employees=101`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies).toEqual([]);
-//     });
-//   });
+// TESTING route for getting results of a specific surveys
+describe('GET /surveys/results/:id', function() {
+  test('gets a specific survey result', async function() {
+    const response = await request(app)
+      .get(`/surveys/results/255`)
+    expect(response.statusCode).toBe(200);
+    expect(response.body.responses[0]).toHaveProperty('id');
+    expect(response.body.responses[0]).toHaveProperty('question_id');
+    expect(response.body.responses[0]).toHaveProperty('answer');
+    expect(response.body.responses[0].question_id).toEqual(255);
+    expect(response.body.responses[0].answer).toEqual(false);
+  });
+  // Testing for no results from query
+  test('Responds with 404 if no response is found in the database', async function() {
+    await db.query('DELETE FROM surveys');
+    const response = await request(app)
+      .get(`/surveys/results/0`)
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty('error');
+  });
+});
 
-//   // TESTING route to find a company with max employee count of query
-//   describe('GET /companies?max_employees', async function() {
-//     test('gets specific company(s) with query of max_employees', async function() {
-//       const response = await request(app)
-//         .get(`/companies?max_employees=101`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies[0].name).toBe('testCompany');
-//     });
-//     // Testing for no results from query
-//     test('Responds with 200 if no company of such requirements exists', async function() {
-//       const response = await request(app)
-//         .get(`/companies?max_employees=99`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies).toEqual([]);
-//     });
-//   });
+// ************** END of tests for GET routes **************
 
-//   // TESTING route for both min and max employee count filter
-//   describe('GET /companies/min_employees&max_employees', async function() {
-//     test('gets specific company(s) with query of both min and max_employees', async function() {
-//       const response = await request(app)
-//         .get(`/companies?min_employees=99&max_employees=101`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body.companies[0].name).toBe('testCompany');
-//     });
-//     // Testing for failure if user error - min > max employee count
-//     test('Responds with 400 if query params are incorrect', async function() {
-//       const response = await request(app)
-//         .get(`/companies?min_employees=101&max_employees=99`)
-//         .send({ _token: auth.token });
-//       expect(response.statusCode).toBe(400);
-//     });
-//   });
-// });
+// ************** BEGIN of tests for POST routes **************
 
-// // TESTING route for getting specific company with a handle
-// describe('GET /companies/handle', async function() {
-//   test('gets specific company with specific handle', async function() {
-//     const response = await request(app)
-//       .get(`/companies/testHandle`)
-//       .send({ _token: auth.token });
-//     expect(response.statusCode).toBe(200);
-//     console.log(
-//       `Inside test for companies/handle GET, response is`,
-//       response.body
-//     );
-//     expect(response.body.company.name).toBe('testCompany');
-//   });
-//   // Testing for failures if no company is found with handle provided
-//   test('Responds with 404 if no company is found with handle provided', async function() {
-//     const response = await request(app)
-//       .get(`/companies/BADHANDLE`)
-//       .send({ _token: auth.token });
-//     expect(response.statusCode).toBe(404);
-//   });
+// TESTING route to add a survey
+describe('POST /surveys', function() {
+  test('adds a new survey', async function() {
+    const response = await request(app)
+      .post(`/surveys`)
+      .send({
+        survey_name: 'Anotha Survey'
+      });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.survey).toHaveProperty('id');
+    expect(response.body.survey).toHaveProperty('survey_name');
+    expect(response.body.survey.survey_name).toBe('Anotha Survey');
+  });
+  test('Responds with 404 if no survey name sent', async function() {
+    const response = await request(app)
+      .post(`/survey`)
+      .send({});
+    expect(response.statusCode).toBe(404);
+  });
+});
 
-//   // TODO- more reqs for query string - what if they search for multiple query string params?
-// });
+// TESTING route to add a question to a survey
+describe('POST /surveys/333', function() {
+  test('adds a new question to a survey', async function() {
+    await request(app)
+      .post(`/surveys`)
+      .send({
+        id: 333,
+        survey_name: 'Add Questions to Me Survey'
+      });
 
-// /***************** END OF GET companies tests *****************/
+    const response = await request(app)
+      .post(`/surveys/333`)
+      .send({
+        survey_id: 333,
+        question: 'Can I has more questions?'
+      });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.question).toHaveProperty('id');
+    expect(response.body.question).toHaveProperty('survey_id');
+    expect(response.body.question).toHaveProperty('question');
+    // expect(response.body.question).toBe('');
+  });
+  test('Responds with 404 if survey id is not found', async function() {
+    const response = await request(app)
+      .post(`/survey/999`)
+      .send({ questionText: 'Bad data'});
+    expect(response.statusCode).toBe(404);
+  });
+});
 
-// // POST /companies - create company from data; return {company: companyData}
-// describe('POST /companies', async function() {
-//   test('creates a new company', async function() {
-//     const response = await request(app)
-//       .post(`/companies`)
-//       .send({
-//         handle: 'banana',
-//         name: 'bananaCompany',
-//         num_employees: 500,
-//         description: 'this is bananas',
-//         logo_url: 'https://bananalogo.com',
-//         _token: auth.token
-//       });
-//     expect(response.statusCode).toBe(200);
-//     expect(response.body.company.name).toBe('bananaCompany');
-//     expect(response.body.company.handle).toBe('banana');
-//     expect(response.body.company.num_employees).toBe(500);
-//     expect(response.body.company.description).toBe('this is bananas');
-//     // JSON schema validator will validate for bad user data
-//   });
-//   test('Responds with 409 if handle is not unique', async function() {
-//     const response = await request(app)
-//       .post(`/companies`)
-//       .send({ handle: 'testHandle', name: 'testCompany', _token: auth.token });
-//     expect(response.statusCode).toBe(409);
-//   });
-// });
-
-// // PATCH /companies - updates company from specific handle provided in url, return {company: companyData}
-// describe('PATCH /companies/:handle', async function() {
-//   test('updates a company', async function() {
-//     const response = await request(app)
-//       .patch(`/companies/testHandle`)
-//       .send({
-//         handle: 'testHandle',
-//         name: 'bananaCompany',
-//         num_employees: 1000,
-//         description: 'this is updated',
-//         logo_url: 'https://bananalogo.com',
-//         _token: auth.token
-//       });
-//     expect(response.statusCode).toBe(200);
-//     expect(response.body.company.name).toBe('bananaCompany');
-//     expect(response.body.company.num_employees).toBe(1000);
-//     expect(response.body.company.description).toBe('this is updated');
-//     // JSON schema validator will validate for bad user data
-//   });
-//   test('Responds with 404 if no company is found', async function() {
-//     const response = await request(app)
-//       .patch(`/companies/BADHANDLE`)
-//       .send({ _token: auth.token });
-//     expect(response.statusCode).toBe(404);
-//   });
-// });
+// TESTING route to take a survey
+describe('POST /surveys/take/255', function() {
+  test('adds a response to a survey', async function() {
+    const response = await request(app)
+      .post(`/surveys/take/255`)
+      .send({
+        answer: true
+      });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.response).toHaveProperty('id');
+    expect(response.body.response).toHaveProperty('question_id');
+    expect(response.body.response).toHaveProperty('answer');
+    // expect(response.body.question).toBe('');
+  });
+  test('Responds with 404 if question id is not found', async function() {
+    const response = await request(app)
+      .post(`/survey/take/999`)
+      .send({ answer: true });
+    expect(response.statusCode).toBe(404);
+  });
+});
 
 // // DELETE /companies - deletes a company with matching handle provided returning {message: "Company deleted"}
 // describe('DELETE /companies', async function() {
@@ -242,9 +199,7 @@ describe('GET /surveys/:id', function() {
 
 // Tear Down - removes records from test DB
 afterEach(async function() {
-  // await db.query('DELETE FROM responses');
-  // await db.query('DELETE FROM questions');
-  await db.query('DELETE FROM surveys WHERE id = 255');
+  await db.query('DELETE FROM surveys');
 });
 
 afterAll(async function() {
