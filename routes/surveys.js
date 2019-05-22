@@ -5,7 +5,7 @@ const Survey = require('../models/survey');
 const Question = require('../models/question');
 const { validate } = require('jsonschema');
 const surveySchema = require('../schemas/surveySchema.json');
-const questionSchema = require('../schemas/surveySchema.json');
+const questionSchema = require('../schemas/questionSchema.json');
 const responseSchema = require('../schemas/responseSchema.json');
 const APIError = require('../helpers/APIError');
 
@@ -36,13 +36,16 @@ router.post('/', async function(req, res, next) {
     const survey = await Survey.create(survey_name);
     return res.json({ survey });
   } catch (error) {
-    error.status = 409;
+    error.status = 404;
     return next(error);
   }
 });
 
 // this route adds a new question to a survey
 router.post('/:id', async function(req, res, next) {
+  const surveyId = req.params.id;
+  const questionText = req.body.question;
+  console.log(`TESTING BODY in route`, req.body)
   const result = validate(req.body, questionSchema);
   if (!result.valid) {
     // pass validation errors to error handler
@@ -53,20 +56,19 @@ router.post('/:id', async function(req, res, next) {
   }
   // at this point in code, we know we have a valid payload
   try {
-    const id = req.params.id;
-    const { question } = req.body;
-    const questions = await Question.create(id, question);
-    return res.json({ questions });
+    const question = await Question.create(surveyId, questionText);
+    return res.json({ question });
   } catch (error) {
-    error.status = 409;
+    error.status = 404;
     return next(error);
   }
 });
 
 // This route should return all questions from a specific survey.
-router.get('/:surveyId', async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
+  const surveyId = req.params.id;
   try {
-    let questions = await Question.getQuestionsFromSurvey(req.params.surveyId);
+    let questions = await Question.getQuestionsFromSurvey(surveyId);
     return res.json({ questions });
   } catch (err) {
     err.status = 404;
@@ -132,7 +134,7 @@ router.delete('/:id', async function(req, res, next) {
 router.delete('/question/:id', async function(req, res, next) {
   try {
     await Question.delete(req.params.id);
-    return res.json({ message: 'Survey deleted' });
+    return res.json({ message: 'Question deleted' });
   } catch (err) {
     err.status = 404;
     return next(err);
