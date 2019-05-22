@@ -104,7 +104,7 @@ describe('GET /surveys/results/:id', function() {
 
 // ************** END of tests for GET routes **************
 
-// ************** BEGIN of tests for POST routes **************
+// ************** START of tests for POST routes **************
 
 // TESTING route to add a survey
 describe('POST /surveys', function() {
@@ -119,83 +119,96 @@ describe('POST /surveys', function() {
     expect(response.body.survey).toHaveProperty('survey_name');
     expect(response.body.survey.survey_name).toBe('Anotha Survey');
   });
-  test('Responds with 404 if no survey name sent', async function() {
+  test('Responds with 400 if no survey name sent', async function() {
     const response = await request(app)
-      .post(`/survey`)
+      .post(`/surveys`)
       .send({});
-    expect(response.statusCode).toBe(404);
+    expect(response.statusCode).toBe(400);
   });
 });
 
 // TESTING route to add a question to a survey
-describe('POST /surveys/333', function() {
+describe('POST /surveys/:id', function() {
   test('adds a new question to a survey', async function() {
-    await request(app)
-      .post(`/surveys`)
-      .send({
-        id: 333,
-        survey_name: 'Add Questions to Me Survey'
-      });
-
     const response = await request(app)
-      .post(`/surveys/333`)
+      .post(`/surveys/255`)
       .send({
-        survey_id: 333,
-        question: 'Can I has more questions?'
+        survey_id: 255,
+        question: "Test question"
       });
     expect(response.statusCode).toBe(200);
     expect(response.body.question).toHaveProperty('id');
     expect(response.body.question).toHaveProperty('survey_id');
     expect(response.body.question).toHaveProperty('question');
-    // expect(response.body.question).toBe('');
+    expect(response.body.question.survey_id).toBe(255);
+    expect(response.body.question.question).toBe("Test question");
+
   });
   test('Responds with 404 if survey id is not found', async function() {
     const response = await request(app)
-      .post(`/survey/999`)
-      .send({ questionText: 'Bad data'});
+      .post(`/surveys/999`)
+      .send({ survey_id: 999, question: 'Bad data'});
     expect(response.statusCode).toBe(404);
   });
 });
 
 // TESTING route to take a survey
-describe('POST /surveys/take/255', function() {
+describe('POST /surveys/take/:id', function() {
   test('adds a response to a survey', async function() {
     const response = await request(app)
       .post(`/surveys/take/255`)
       .send({
+        question_id: 255,
         answer: true
       });
     expect(response.statusCode).toBe(200);
     expect(response.body.response).toHaveProperty('id');
     expect(response.body.response).toHaveProperty('question_id');
     expect(response.body.response).toHaveProperty('answer');
-    // expect(response.body.question).toBe('');
+    expect(response.body.response.question_id).toBe(255);
+    expect(response.body.response.answer).toBe(true);
   });
   test('Responds with 404 if question id is not found', async function() {
     const response = await request(app)
-      .post(`/survey/take/999`)
-      .send({ answer: true });
+      .post(`/surveys/take/999`)
+      .send({ question_id: 999, answer: true });
     expect(response.statusCode).toBe(404);
   });
 });
 
-// // DELETE /companies - deletes a company with matching handle provided returning {message: "Company deleted"}
-// describe('DELETE /companies', async function() {
-//   test('deletes a company', async function() {
-//     const response = await request(app)
-//       .delete(`/companies/testHandle`)
-//       .send({ _token: auth.token });
-//     expect(response.statusCode).toBe(200);
-//     expect(response.body).toEqual({ message: 'Company deleted' });
-//   });
-//   test('Responds with 404 if no company is found', async function() {
-//     const response = await request(app)
-//       .delete(`/companies/BADHANDLE`)
-//       .send({ _token: auth.token });
-//     expect(response.statusCode).toBe(404);
-//   });
-// });
-/***************** END OF POST/PATCH/DELETE companies tests *****************/
+// ************** END of tests for POST routes **************
+
+// ************** START of tests for DELETE routes **************
+
+// DELETE /companies - deletes a company with matching handle provided returning {message: "Company deleted"}
+describe('DELETE /surveys/:id', async function() {
+  test('deletes a survey', async function() {
+    const response = await request(app)
+      .delete(`/surveys/255`);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ message: 'Survey deleted' });
+  });
+  test('Responds with 404 if no survey is found', async function() {
+    const response = await request(app)
+      .delete(`/surveys/888`);
+    expect(response.statusCode).toBe(404);
+  });
+});
+
+describe('DELETE /surveys/question/:id', async function() {
+  test('deletes a question', async function() {
+    const response = await request(app)
+      .delete(`/surveys/question/255`);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ message: 'Question deleted' });
+  });
+  test('Responds with 404 if no question is found', async function() {
+    const response = await request(app)
+      .delete(`/surveys/question/888`);
+    expect(response.statusCode).toBe(404);
+  });
+});
+/***************** END OF TESTS for DELETE routes *****************/
 
 // Tear Down - removes records from test DB
 afterEach(async function() {
