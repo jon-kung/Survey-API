@@ -9,6 +9,9 @@ class Question {
       `INSERT INTO questions (survey_id, question) VALUES ($1, $2) RETURNING *`,
       [surveyId, question]
     );
+    if (result.rows.length === 0) {
+      throw new APIError(`No survey found with that ID :(`);
+    }
     return result.rows[0];
   }
 
